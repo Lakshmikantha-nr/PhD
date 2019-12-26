@@ -1,0 +1,22 @@
+//Files//
+geometry: is the shapefile
+image: is the imagecollection landsat7
+
+//Code starts from here//
+var dataset = ee.ImageCollection('LANDSAT/LE07/C01/T1_RT')
+                  .filterDate('1999-01-01', '2013-12-31')
+                  .filterBounds(geometry)
+  .map(function(image){return image.clip(geometry)}) ;
+  
+var getCloudScores = function(dataset){
+    //Get the cloud cover
+    var value = ee.Image(dataset).get('CLOUD_COVER');
+    return ee.Feature(null, {'score': value})
+};
+
+var results = dataset.map(getCloudScores);
+Export.table.toDrive({
+  collection: results, 
+  description: 'Cloud_Score',
+  fileFormat: 'CSV'
+});
