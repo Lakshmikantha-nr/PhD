@@ -1,0 +1,22 @@
+Deployment successfully updated.
+Version 1 on Jul 7, 3:28 PM
+Deployment ID
+AKfycbw0YGHxulPCtJRAB02uERgmZ9X49hfTBMkc9ztjjlc7_z9uUvP_VNqg90tgxhw0woaSnQ
+AKfycbw0YGHxulPCtJRAB02uERgmZ9X49hfTBMkc9ztjjlc7_z9uUvP_VNqg90tgxhw0woaSnQ
+
+
+Web app
+URL
+https://script.google.com/macros/s/AKfycbw0YGHxulPCtJRAB02uERgmZ9X49hfTBMkc9ztjjlc7_z9uUvP_VNqg90tgxhw0woaSnQ/exec
+https://script.google.com/macros/s/AKfycbw0YGHxulPCtJRAB02uERgmZ9X49hfTBMkc9ztjjlc7_z9uUvP_VNqg90tgxhw0woaSnQ/exec
+
+I used ESP 2.7.0
+My arduino version is 1.8.13
+Both in library and arduino code change 6 to 24 for string length
+It worked
+
+Sheet ID: https://docs.google.com/spreadsheets/d/1MCGG98EdGy-EtkcuI0QN2FriqmS3Hbo6hS1JdUlVxpI/edit#gid=0
+
+Google sheet deployer sheet ID: https://script.google.com/u/0/home/projects/1VLbNYL3aPx08D3LeidC21xL1_XmabPrYyy8RUO2kqvRg6PNKAzHN5K7t/edit
+
+Youtube Video URL: https://www.youtube.com/watch?v=GOiLbs5Sidc&t=1s
