@@ -1,0 +1,36 @@
+rm(list = ls())
+install.packages("raster")
+install.packages("rnaturalearth")
+install.packages("here")
+install.packages("geodata")
+library(geodata)
+library(here)
+library(raster)
+library(rnaturalearth)
+library(stars)      # To process the raster data
+library(sf)         # To work with vector data
+library(ggplot2)    # For plotting
+library(patchwork)  # To combine different ggplot plots
+file_path <- paste0(dirname(here::here()), "/blog_data/")
+raster::getData(name = 'worldclim', var = 'bio', res = 10,
+                path = file_path)
+raster::getData(name = 'CMIP5', var = 'bio', res = 10,
+                rcp = 45, model = 'IP', year = 70,
+                path = file_path)
+annual_T <- stars::read_stars(paste0(file_path, "wc10/bio1.bil"))
+annual_T <- annual_T/10
+annual_T_70 <- stars::read_stars(paste0(file_path, "cmip5/10m/ip45bi701.tif"))
+annual_T_70 <- annual_T_70/10
+# The result, temp_colors, is a function with argument n for the number of
+# colors.
+temp_colors <- colorRampPalette(c("#2c7bb6", "#abd9e9", "#ffffbf", "#fdae61", "#d7191c"))
+nbreaks <- 20
+{
+  par(mfrow = c(1,2))
+  plot(annual_T, main = "Annual temperature - 1960-1990",
+       nbreaks = nbreaks,
+       col = temp_colors(nbreaks - 1))
+  plot(annual_T_70, main = "Annual temperature - RCP 4.5 projection for 2061-2080",
+       nbreaks = nbreaks,
+       col = temp_colors(nbreaks - 1))
+}
