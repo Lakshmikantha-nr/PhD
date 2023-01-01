@@ -34,3 +34,81 @@ nbreaks <- 20
        nbreaks = nbreaks,
        col = temp_colors(nbreaks - 1))
 }
+
+india_map <- rnaturalearth::ne_countries(country = "india", returnclass = "sf")
+#india_map <- sp::plot(ne_countries(country = 'india', type='countries', returnclass = "sf"))
+# The precision has to be set to a value > 0 to resolve internal boundaries.
+st_precision(india_map) <- 1e9 # Required to
+india_map <- st_union(india_map)
+
+{
+  par(mar = c(0,0,0,0))
+  plot(india_map)
+}
+
+
+annual_T_IN <- annual_T[india_map]
+# CRS for projected T and south america map are the same (EPSG 4326) but the
+# proj4string includes more details for annual_T_70. Thus, they have to
+# be made identical before cropping.
+st_crs(annual_T_70) <- st_crs(india_map)
+annual_T_70_IN <- annual_T_70[india_map]
+
+{
+  par(mfrow = c(1, 2))
+  plot(annual_T_IN, main = "Annual temperature - 1960-1990",
+       nbreaks = nbreaks,
+       col = temp_colors(nbreaks - 1))
+  plot(main = "Annual temperature - RCP 4.5 projection for 2061-2080",
+       annual_T_70_IN, nbreaks = nbreaks,
+       col = temp_colors(nbreaks - 1))
+}
+
+#Basic Stats
+annual_T_IN
+mean(annual_T$bio1.bil, na.rm = T)
+
+
+
+#Comparison ggplots
+recent_T_plot <- ggplot() + 
+  geom_stars(data = annual_T_IN) +
+  scale_fill_gradientn(name = "Annual T [°C]",
+                       colors = temp_colors(5),
+                       limits = c(-7, 32),
+                       na.value = "white") +
+  geom_sf(data = india_map, fill = NA) +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  ggtitle("a) 1960-1990") +
+  theme_void() +
+  theme(legend.position = "none")
+
+projected_T_plot <- ggplot() + 
+  geom_stars(data = annual_T_IN["projected"]) +
+  scale_fill_gradientn(name = "Annual T [°C]",
+                       colors = temp_colors(5),
+                       limits = c(-7, 32),
+                       na.value = "white") +
+  geom_sf(data = india_map, fill = NA) +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  ggtitle("b) 2061-2080 (projected)") +
+  theme_void() +
+  theme(legend.position = "bottom")
+
+projected_change_T_plot <- ggplot() + 
+  geom_stars(data = annual_T_IN["change"]) +
+  scale_fill_gradientn(name = "Change in T [°C]",
+                       colors = temp_colors(5)[3:5],
+                       limits = c(1, 5),
+                       na.value = "white") +
+  geom_sf(data = india_map, fill = NA) +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  ggtitle("c) Projected change") +
+  theme_void() +
+  theme(legend.position = "bottom")
+
+(recent_T_plot / projected_T_plot + plot_layout(guides = "keep")) | projected_change_T_plot +
+  theme(plot.margin = margin(c(0, 0, 0, 0)))
